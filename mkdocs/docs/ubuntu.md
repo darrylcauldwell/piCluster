@@ -42,80 +42,17 @@ sudo apt update
 sudo apt upgrade -y
 ```
 
-## VCGENCMD
+## Install Tools
 
-The vvcgencmd is a command line utility that can get various pieces of information from the VideoCore GPU on the Raspberry Pi. This isn't shipped with Ubuntu but as Raspberry Pi OS is open source we can build from source.
-
-```
-sudo apt install -y gcc-aarch64-linux-gnu cmake
-git clone https://github.com/raspberrypi/userland.git
-cd userland
-./buildme --aarch64
-```
-
-Now we have the binary we can copy it and a libary it depends and make it available.
+The VideoCore packages provide command line utilities that can get various pieces of information from the VideoCore GPU on the Raspberry Pi. The linux flexible I/O tester tool is  easy to use and useful for understanding storage sub-system performance.
 
 ```
-sudo mv build/bin/vcgencmd /usr/local/bin/vcgencmd
-sudo mv build/lib/libvcos.so /lib/
-sudo chown root:video /usr/local/bin/vcgencmd
-sudo chmod 775 /usr/local/bin/vcgencmd
-sudo usermod -aG video ubuntu
-echo 'SUBSYSTEM=="vchiq", GROUP="video", MODE="0660"' | sudo tee /etc/udev/rules.d/99-input.rules
-sudo udevadm control --reload-rules && sudo udevadm trigger
+sudo apt install -y libraspberrypi-bin fio
 ```
 
-## SD Card Performance
+## USB Flash Disk
 
-The linux flexible I/O tester tool is  easy to use and useful for understanding storage sub-system performance.
-
-```
-sudo apt-get install -y fio
-```
-
-Linux FIO tool will be used to measure sequential write performance of a 4GB file:
-
-```
-fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=write
-```
-
-![SD Card Read Performance](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/sd_reads.png)
-
-Similarly, the tool will be used to measure sequential read performance of a 4GB file:
-
-```
-fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=read
-```
-
-![SD Card Write Performance](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/sd_writes.png)
-
-The tool output indcates me sequential reads:
-
-1.  IOPS=10.1k, BW=39.5MiB/s
-2.  IOPS=10.1k, BW=39.3MiB/s
-3.  IOPS=10.1k, BW=39.4MiB/s
-4.  IOPS=10.1k, BW=39.3MiB/s
-
-The tool output indcates me sequential writes:
-
-1.  IOPS=5429, BW=21.2MiB/s
-2.  IOPS=5128, BW=20.0MiB/s
-3.  IOPS=5136, BW=20.1MiB/s
-4.  IOPS=5245, BW=20.5MiB/s
-
-With the SD card the performance bottleneck is the reader which supports peak bandwidth 50MiB/s. To test this I has a lower spec SanDisk Ultra card so I repeated test and got near exact throughput to the SanDisk Extreme.
-
-The tool output indcates me sequential reads:
-
-1.  IOPS=10.1k, BW=39.4MiB/s
-
-The tool output indcates me sequential writes:
-
-1.  IOPS=5245, BW=20.5MiB/s
-
-## USB Flash Performance
-
-The USB flash drive should deliver improved performance, first check it can be seen by the system and note its device. The SD card on the Pi will normally show as /dev/mmcblk0. The USB drive will normally show as /dev/sda 
+The SD card on the Pi will normally show as /dev/mmcblk0. The USB drive will normally show as /dev/sda. The following could be data destructive so check the enumeration before proceeding.
 
 ```
 sudo fdisk -l
@@ -148,31 +85,85 @@ We can then mount and move into and set permissions for the parition
 sudo mkdir /mnt/ssd
 sudo mount /dev/sda1 /mnt/ssd
 echo "LABEL=SSD  /mnt/ssd  ext4  defaults 0 2" | sudo cat /etc/fstab -
-cd /mnt/ssd
 sudo chmod 777 .
 ```
 
 ![USB Mount](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/usb_ext4.png)
 
+## SD Card Performance
+
+Linux FIO tool will be used to measure sequential write performance of a 4GB file:
+
+```
+fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=write
+```
+
+![SD Card Read Performance](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/sd_reads.png)
+
+The tool output shows sequential read rate:
+
+1.  IOPS=10.1k, BW=39.5MiB/s
+2.  IOPS=10.1k, BW=39.3MiB/s
+3.  IOPS=10.1k, BW=39.4MiB/s
+4.  IOPS=10.1k, BW=39.3MiB/s
+
+Similarly, the tool will be used to measure sequential read performance of a 4GB file:
+
+```
+fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=read
+```
+
+![SD Card Write Performance](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/sd_writes.png)
+
+The tool output shows sequential write rate:
+
+1.  IOPS=5429, BW=21.2MiB/s
+2.  IOPS=5128, BW=20.0MiB/s
+3.  IOPS=5136, BW=20.1MiB/s
+4.  IOPS=5245, BW=20.5MiB/s
+
+With the SD card the performance bottleneck is the reader which supports peak bandwidth 50MiB/s. To test this I has a lower spec SanDisk Ultra card so I repeated test and got near exact throughput to the SanDisk Extreme.
+
+The tool output shows sequential read rate:
+
+1.  IOPS=10.1k, BW=39.4MiB/s
+
+The tool output shows sequential write rate:
+
+1.  IOPS=5245, BW=20.5MiB/s
+
+## USB Flash Performance
+
+The USB flash drive should deliver improved performance, first check it can be seen by the system and note its device. 
+
 Then repeated the same performance tests using fio on the SSD. Linux FIO tool will be used to measure sequential write/read performance of a 4GB file:
 
 ```
-fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=/mnt/ssd/test --bs=4k --iodepth=64 --size=4G --readwrite=write
+cd /mnt/ssd
+fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=write
+```
+
+![USB Write Performance](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/usb_writes.png)
+
+The tool output shows sequential write rate:
+
+1.  IOPS=14.5k, BW=56.6MiB/s
+2.  IOPS=14.4k, BW=56.4MiB/s
+3.  IOPS=14.4k, BW=56.2MiB/s
+4.  IOPS=11.9k, BW=46.6MiB/s
+
+```
+cd /mnt/ssd
 fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=/mnt/ssd/test --bs=4k --iodepth=64 --size=4G --readwrite=read
 ```
 
-The tool output indcates me sequential reads:
+![USB Read Performance](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/usb_reads.png)
 
-1.  IOPS=42.2k, BW=165MiB/s
-2.  IOPS=43.9k, BW=171MiB/s
-3.  IOPS=43.1k, BW=168MiB/s
-4.  IOPS=43.9k, BW=171MiB/s
+The tool output shows sequential read rate:
 
-The tool output indcates me sequential writes:
+1.  IOPS=33.3k, BW=130MiB/s
+2.  IOPS=37.0k, BW=148MiB/s
+3.  IOPS=42.6k, BW=166MiB/s
+4.  IOPS=42.5k, BW=166MiB/s
 
-1.  IOPS=12.3k, BW=48.2MiB/s
-2.  IOPS=10.9k, BW=42.8MiB/s
-3.  IOPS=10.6k, BW=41.5MiB/s
-4.  IOPS=10.9k, BW=42.8MiB/s
-
-So for a very small investment inpwd the USB Flash Drives we've increased sequential read potential by ~400% and write potential by ~200%.  The Pi 4 firmware doesn't presently offer option for USB boot so the SD cards are needed but hopefully soon the firmware will get updated and this will
+So for a very small investment inpwd the USB Flash Drives we've increased sequential read potential by 4X and write potential by 3X.  The Pi 4 firmware doesn't presently offer option for USB boot so the SD cards are needed but hopefully soon the firmware will get updated and this will
