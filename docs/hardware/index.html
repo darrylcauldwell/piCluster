@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Hardware - Raspberry Pi Cluster</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">Raspberry Pi Cluster</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href=".." class="nav-link">Home</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../arm-intel/" class="nav-link">Arm/Intel</a>
+                            </li>
+                            <li class="navitem active">
+                                <a href="./" class="nav-link">Hardware</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../ubuntu/" class="nav-link">Ubuntu</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../mpi/" class="nav-link">MPI</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../arm-intel/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../ubuntu/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#pi-cluster-rack-hardware" class="nav-link">Pi Cluster Rack Hardware</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#power-over-ethernet" class="nav-link">Power over Ethernet</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#network-switch" class="nav-link">Network Switch</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#storage" class="nav-link">Storage</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#mounting-rack" class="nav-link">Mounting Rack</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#rack-cabling" class="nav-link">Rack Cabling</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#hardware-bill-of-materials" class="nav-link">Hardware Bill of materials</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="pi-cluster-rack-hardware">Pi Cluster Rack Hardware</h1>
+<h2 id="power-over-ethernet">Power over Ethernet</h2>
+<p>One of my goals for the cluster was the hardware self-contained and easy to connect to network and power. Out of the box the Raspberry Pi 4b is powered over USB-C and operates at 5.1V upto 3A so has maximum draw (5.1*3=) 15.3watt. While I could use one official Raspberry Pi USB-C 15.3watt power supply for each this would require four power sockets. A cleaner cabling solution is to equip each Pi 4b with a PoE HAT and power each using a Power over Ethernet–enabled network. When the Pi is cabled to a PoE network switch port the power gets routed to four PoE pins on the Pi board. The PoE switch ports deliver between 27-57volts. The PoE HAT connects to the four PoE pins and has onboard transformer which converts input voltage to 5volt and then routes this to the GPIO power pins.</p>
+<h2 id="network-switch">Network Switch</h2>
+<p>For selecting the PoE network switch there are two important factors I considered.  PoE has two specifications the initial 802.3af (upto 15watt) and revised 802.3at (upto 30watt), the Pi 4b has 15.3watt maximum draw so ports supporting 802.3af.  Another important factor to consider is maximum draw across  all PoE ports here our maximum draw would be (15.3*4=) 61.2watts. The Netgear GS305P has five ports with four supported for 802.3af or 802.3at and is rated for 63W power draw, it is also compact with dimensions 158 x 101 x 29 mm.</p>
+<h2 id="storage">Storage</h2>
+<p>For storage selection the SanDisk Extreme offers sequential read up to 160MB/sec and sequential write up to 90MB/sec. The SanDisk Ultra offers sequential read up to 100MB/sec and sequential write up to 90MB/sec. The Pi4B has a dedicated SD card socket which suports 1.8V, DDR50 mode (at a peak bandwidth of 50 Megabytes / sec). The Pi 4h as a USB 3 interface which has peak bandwidth 620 Megabytes / sec. The Arcanite 128GB USB 3.1 Flash Drive has a small formfactor and low cost and offers read speeds up to 400 MB/s and write speeds up to 100 MB/s.</p>
+<h2 id="mounting-rack">Mounting Rack</h2>
+<p>Towards goal of keeping cluster self contained I wanted to house the network switch and four Pi 4b in a rack. There are vaious off the shelf options for stacking Pi's but I couldn't find a great solution for my specific requirement. I'd not done a project using custom cut metal before and thought this would be a  good opportunity to explore. I thought aluminium would be good to polish to a nice finish so I decided to use 3mm medium strength 5251 aluminium.</p>
+<p>I found a UK based mail-order laser cutting provider <a href="https://lasered.co.uk/">Lasered</a>. To make the order required drawing in either Drawing Interchange Format (DXF), AutoCAD (DWG) of Mastercam Numerical Control File (NC) format to  create this I used open-source LibreCAD software. I'd not used CAD software before so there was a learning curve but this was not large and within few hours I'd created two drawings. The cluster will primarily be used  as Kubernetes cluster so I designed all the plates shaped as heptagons, the top and base plates also have Raspberry Pi logo. For attaching plates together allowing enough space for airflow I chose 35mm standoffs with M4 thread to accept M4 I gave holes a 4.2mm radius. For mounting the Pi the board has 2.7mm holes to accept M2.5 thread screws so I mirror these on the plate with 2.7mm radius and use 5mm standoff to lift slightly. I added a rectangular hole behin Pi on each shelf to allow for internal PoE cable routing. The rack dimensions when assembled, widest points the heptagon is 210mm and (6x3mm=)18mm plates plus (5x40mm)=200 standoffs gives total height of 218mm.
+<img alt="Laser cut lates" src="https://github.com/darrylcauldwell/piCluster/blob/main/_images/cut_plates.jpeg" /></p>
+<p>I got the plates cut and they looked better than expected except the standoff holes looked rather large. I checked the the calipers and noticed my planned 4.2mm holes were 8.4mm and my 2.7mm holes 5.4mm. Seems I had entered diameter as value for circle radius parameter. Luckily I hadn't ordered the standoffs, nuts or bolts. It was easy to switched from M4 to M6 for the between layer standoffs but as the Pi board only accepts M2.5 I kept these and added a washer to prevent bolt going straight through the mount hole on the shelf.</p>
+<p><img alt="Oops radius != diameter" src="https://github.com/darrylcauldwell/piCluster/blob/main/_images/radius_diameter.jpeg" /></p>
+<p><img alt="First assembly" src="https://github.com/darrylcauldwell/piCluster/blob/main/_images/first_assembly.jpeg" /></p>
+<h2 id="rack-cabling">Rack Cabling</h2>
+<p>To keep the internal rack cabling tidy I decided to create each cable with custom length. The PoE standards require category 3 cable or better for 802.3af (upto 15watt) and category 5 cable for better for 802.3at (upto 30watt). The Raspberry Pi NIC can operate at 1Gb/s, category 5 is cable rated for 100Mb/s, category 5e is cable rated for 1Gb/s, category 6 is cable rated for 10Gb/s. To operate the Pi's over PoE at full potential I use category 5e cable and crimped RJ45 connectors.</p>
+<p><img alt="Custom cable lengths" src="https://github.com/darrylcauldwell/piCluster/blob/main/_images/custom_cables.jpeg" /></p>
+<h2 id="hardware-bill-of-materials">Hardware Bill of materials</h2>
+<ul>
+<li>35mm M6 Standoffs (Bag 50) £30</li>
+<li>10mm M6 screws (Bag 100) £6.45</li>
+<li>M6 hexagonal nuts (Bag 250) £6</li>
+<li>5mm M2.5 Standoffs (Bag 20) £5</li>
+<li>6mm M2.5 screws (Bag 100) £3.50</li>
+<li>Custom laser cut aluminium plates £60</li>
+<li>&lt;1m Cat5e cable</li>
+<li>RJ45 cable crimping tool kit £20</li>
+</ul>
+<p>Total rack parts cost ~£130</p>
+<ul>
+<li>4x Raspberry Pi 4B WITH 8GB RAM (4X £73.50=) £294</li>
+<li>4x Raspberry Pi PoE HAT (4x £18=) £72</li>
+<li>4x 128GB SanDisk Extreme (4x £24=) £96</li>
+<li>4x Arcanite 128GB USB 3.1 Flash Drive (4x £20=) £80</li>
+<li>Netgear GS305P £45</li>
+</ul>
+<p>Total cluster parts cost ~£717</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

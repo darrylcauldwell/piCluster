@@ -1,0 +1,18 @@
+Shape Dimensions
+
+Heptagon first corner 0,0 and second corner 94,0
+
+M4 standoff holes have 4.2mm radius and are positioned at
+-45,76
+-29,159
+47,197
+124,159
+140,76
+88,10
+6,10
+
+M2 mounting holes have 2.7mm radius and are positioned at
+70.8, 4.45
+21.8, 4.45
+70.8, 62.4
+21.8, 62.4
