@@ -27,6 +27,13 @@ To keep the internal rack cabling tidy I decided to create each cable with custo
 
 ![Custom cable lengths](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/custom_cables.jpeg)
 
+## Finished Rack
+
+![Pi Rack Full](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/rack_full.jpeg)
+
+![Pi Rack Side](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/rack_side.jpeg)
+
+
 
 ## Hardware Bill of materials
 * 35mm M6 Standoffs (Bag 50) £30

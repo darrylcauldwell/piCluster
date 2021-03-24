@@ -154,12 +154,9 @@ sudo apt upgrade -y
 EOF
 </code></pre>
 <p><img alt="USB Partition" src="https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/usb_dev.png" /></p>
-<p>Then format and label the partition</p>
+<p>Then format and label the partition then mount and set permissions for the parition</p>
 <pre><code>sudo mkfs.ext4 -L SSD /dev/sda1
-</code></pre>
-<p><img alt="USB Format" src="https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/usb_ext4.png" /></p>
-<p>We can then mount and move into and set permissions for the parition</p>
-<pre><code>sudo mkdir /mnt/ssd
+sudo mkdir /mnt/ssd
 sudo mount /dev/sda1 /mnt/ssd
 echo &quot;LABEL=SSD  /mnt/ssd  ext4  defaults 0 2&quot; | sudo cat /etc/fstab -
 sudo chmod 777 .

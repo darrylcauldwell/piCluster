@@ -71,17 +71,10 @@ EOF
 
 ![USB Partition](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/usb_dev.png)
 
-Then format and label the partition
+Then format and label the partition then mount and set permissions for the parition
 
 ```
 sudo mkfs.ext4 -L SSD /dev/sda1
-```
-
-![USB Format](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/usb_ext4.png)
-
-We can then mount and move into and set permissions for the parition
-
-```
 sudo mkdir /mnt/ssd
 sudo mount /dev/sda1 /mnt/ssd
 echo "LABEL=SSD  /mnt/ssd  ext4  defaults 0 2" | sudo cat /etc/fstab -
