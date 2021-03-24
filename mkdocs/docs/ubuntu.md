@@ -90,12 +90,14 @@ fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --fi
 ![SD Card Write Performance](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/sd_writes.png)
 
 The tool output indcates me sequential reads:
+
 1.  IOPS=10.1k, BW=39.5MiB/s
 2.  IOPS=10.1k, BW=39.3MiB/s
 3.  IOPS=10.1k, BW=39.4MiB/s
 4.  IOPS=10.1k, BW=39.3MiB/s
 
 The tool output indcates me sequential writes:
+
 1.  IOPS=5429, BW=21.2MiB/s
 2.  IOPS=5128, BW=20.0MiB/s
 3.  IOPS=5136, BW=20.1MiB/s
@@ -104,9 +106,11 @@ The tool output indcates me sequential writes:
 With the SD card the performance bottleneck is the reader which supports peak bandwidth 50MiB/s. To test this I has a lower spec SanDisk Ultra card so I repeated test and got near exact throughput to the SanDisk Extreme.
 
 The tool output indcates me sequential reads:
+
 1.  IOPS=10.1k, BW=39.4MiB/s
 
 The tool output indcates me sequential writes:
+
 1.  IOPS=5245, BW=20.5MiB/s
 
 ## USB Flash Performance
@@ -142,7 +146,9 @@ LABEL=SSD  /mnt/ssd  ext4  defaults 0 2
 Then repeated the same performance tests using fio on the SSD.
 
 The tool output indcates me sequential reads:
+
 1.  
 
 The tool output indcates me sequential writes:
+
 1.  

@@ -53,7 +53,7 @@ mpirun -np 16 -machinefile ~/machinefile vcgencmd measure_temp
 
 ![MPIRUN Measure Temparature](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/mpirun_temp.png)
 
-Scatter is a way that we can take a bunch of elements, like those in a list, and "scatter" those elements around to the processing nodes.
+While its interesting running individual commands across nodes the MPI for Python module exposes options for programs to spread load.  A simple test of this is where we scatter a bunch of elements, like those in a list, to processing nodes.
 
 ```
 cat <<EOF >> ~/scatter.py
@@ -82,10 +82,10 @@ mpirun -np 16 -machinefile ~/machinefile python3 ~/scatter.py
 
 ![MPIRUN Scatter](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/mpirun_scatter.png)
 
-I thought it would be nice for my Pi cluster to calculate Pi with MPI and found the following script.
+While scattering elements of a list is interesting splitting up a processing problem and distributing to multiple processing nodes is more fun.  Calculating Pi is a nice example of this,  and its nice for a Pi cluster to calculate Pi with MPI.
 
 ```
-wget -O ~/pi.py https://raw.githubusercontent.com/darrylcauldwell/piClusterRack/main/pi.py
+wget -O ~/pi.py https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/scripts/pi.py
 mpirun -np 16 -machinefile ~/machinefile python3 pi.py
 ```
 
