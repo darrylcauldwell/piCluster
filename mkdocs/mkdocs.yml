@@ -1,7 +1,6 @@
 site_name: Raspberry Pi Cluster
 nav:
     - Home: index.md
-    - Arm/Intel: arm-intel.md
     - Hardware: hardware.md
     - Ubuntu: ubuntu.md
     - MPI: mpi.md
