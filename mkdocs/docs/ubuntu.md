@@ -3,7 +3,7 @@ I used [Raspberry Pi imager](https://www.raspberrypi.org/software/) to install t
 
 The image is configured with DHCP client, [Pi device MAC addresses are prefixed DC:A6:32](https://maclookup.app/macaddress/DCA632). I connected to my router which acts as DHCP server and found the four leases sorting by MAC. With the DHCP addresses can connect via SSH, the Ubuntu image has default username of `ubuntu` and password `ubuntu`. You're prompted to change password at first connect.
 
-![Ubuntu Password](https://github.com/darrylcauldwell/piCluster/blob/main/_images/ubuntu-pw.png)
+![Ubuntu Password](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/ubuntu-pw.png)
 
 I want to reliably know how to connect to these and like to change from dynamic to a staticly asssigned IP address. To do this for Ubuntu 20.10 we update Netplan configuration.
 
@@ -79,7 +79,7 @@ Linux FIO tool will be used to measure sequential write performance of a 4GB fil
 fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=write
 ```
 
-![SD Card Read Performance](https://github.com/darrylcauldwell/piCluster/blob/main/_images/sd_reads.png)
+![SD Card Read Performance](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/sd_reads.png)
 
 Similarly, the tool will be used to measure sequential read performance of a 4GB file:
 
@@ -87,7 +87,7 @@ Similarly, the tool will be used to measure sequential read performance of a 4GB
 fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=read
 ```
 
-![SD Card Write Performance](https://github.com/darrylcauldwell/piCluster/blob/main/_images/sd_writes.png)
+![SD Card Write Performance](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/sd_writes.png)
 
 The tool output indcates me sequential reads:
 1.  IOPS=10.1k, BW=39.5MiB/s

@@ -51,7 +51,7 @@ The easiest way to run commands or code is with the mpirun command. This command
 mpirun -np 16 -machinefile ~/machinefile vcgencmd measure_temp
 ```
 
-![MPIRUN Measure Temparature](https://github.com/darrylcauldwell/piClusterRack/blob/main/_images/mpirun_temp.png)
+![MPIRUN Measure Temparature](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/mpirun_temp.png)
 
 Scatter is a way that we can take a bunch of elements, like those in a list, and "scatter" those elements around to the processing nodes.
 
@@ -80,7 +80,7 @@ Once script created execute:
 mpirun -np 16 -machinefile ~/machinefile python3 ~/scatter.py
 ```
 
-![MPIRUN Scatter](https://github.com/darrylcauldwell/piClusterRack/blob/main/_images/mpirun_scatter.png)
+![MPIRUN Scatter](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/mpirun_scatter.png)
 
 I thought it would be nice for my Pi cluster to calculate Pi with MPI and found the following script.
 
@@ -89,4 +89,4 @@ wget -O ~/pi.py https://raw.githubusercontent.com/darrylcauldwell/piClusterRack/
 mpirun -np 16 -machinefile ~/machinefile python3 pi.py
 ```
 
-![Pi with MPI on Pi](https://github.com/darrylcauldwell/piClusterRack/blob/main/_images/pi_with_mpi_on_pi.png)
+![Pi with MPI on Pi](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/pi_with_mpi_on_pi.png)

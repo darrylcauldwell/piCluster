@@ -13,19 +13,19 @@ For storage selection the SanDisk Extreme offers sequential read up to 160MB/sec
 Towards goal of keeping cluster self contained I wanted to house the network switch and four Pi 4b in a rack. There are vaious off the shelf options for stacking Pi's but I couldn't find a great solution for my specific requirement. I'd not done a project using custom cut metal before and thought this would be a  good opportunity to explore. I thought aluminium would be good to polish to a nice finish so I decided to use 3mm medium strength 5251 aluminium.
 
 I found a UK based mail-order laser cutting provider [Lasered](https://lasered.co.uk/). To make the order required drawing in either Drawing Interchange Format (DXF), AutoCAD (DWG) of Mastercam Numerical Control File (NC) format to  create this I used open-source LibreCAD software. I'd not used CAD software before so there was a learning curve but this was not large and within few hours I'd created two drawings. The cluster will primarily be used  as Kubernetes cluster so I designed all the plates shaped as heptagons, the top and base plates also have Raspberry Pi logo. For attaching plates together allowing enough space for airflow I chose 35mm standoffs with M4 thread to accept M4 I gave holes a 4.2mm radius. For mounting the Pi the board has 2.7mm holes to accept M2.5 thread screws so I mirror these on the plate with 2.7mm radius and use 5mm standoff to lift slightly. I added a rectangular hole behin Pi on each shelf to allow for internal PoE cable routing. The rack dimensions when assembled, widest points the heptagon is 210mm and (6x3mm=)18mm plates plus (5x40mm)=200 standoffs gives total height of 218mm.
-![Laser cut lates](https://github.com/darrylcauldwell/piCluster/blob/main/_images/cut_plates.jpeg)
+![Laser cut lates](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/cut_plates.jpeg)
 
 I got the plates cut and they looked better than expected except the standoff holes looked rather large. I checked the the calipers and noticed my planned 4.2mm holes were 8.4mm and my 2.7mm holes 5.4mm. Seems I had entered diameter as value for circle radius parameter. Luckily I hadn't ordered the standoffs, nuts or bolts. It was easy to switched from M4 to M6 for the between layer standoffs but as the Pi board only accepts M2.5 I kept these and added a washer to prevent bolt going straight through the mount hole on the shelf.
 
-![Oops radius != diameter](https://github.com/darrylcauldwell/piCluster/blob/main/_images/radius_diameter.jpeg)
+![Oops radius != diameter](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/radius_diameter.jpeg)
 
-![First assembly](https://github.com/darrylcauldwell/piCluster/blob/main/_images/first_assembly.jpeg)
+![First assembly](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/first_assembly.jpeg)
 
 ## Rack Cabling
 
 To keep the internal rack cabling tidy I decided to create each cable with custom length. The PoE standards require category 3 cable or better for 802.3af (upto 15watt) and category 5 cable for better for 802.3at (upto 30watt). The Raspberry Pi NIC can operate at 1Gb/s, category 5 is cable rated for 100Mb/s, category 5e is cable rated for 1Gb/s, category 6 is cable rated for 10Gb/s. To operate the Pi's over PoE at full potential I use category 5e cable and crimped RJ45 connectors.
 
-![Custom cable lengths](https://github.com/darrylcauldwell/piCluster/blob/main/_images/custom_cables.jpeg)
+![Custom cable lengths](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/custom_cables.jpeg)
 
 
 ## Hardware Bill of materials
