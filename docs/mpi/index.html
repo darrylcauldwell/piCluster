@@ -125,7 +125,7 @@ EOF
 <p>The easiest way to run commands or code is with the mpirun command. This command, run in a shell, will launch multiple copies of your code, and set up communications between them. As each Pi has four cores and we have four we can specify number of processors to run as sixteen.</p>
 <pre><code>mpirun -np 16 -machinefile ~/machinefile vcgencmd measure_temp
 </code></pre>
-<p><img alt="MPIRUN Measure Temparature" src="https://github.com/darrylcauldwell/piClusterRack/blob/main/_images/mpirun_temp.png" /></p>
+<p><img alt="MPIRUN Measure Temparature" src="https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/mpirun_temp.png" /></p>
 <p>Scatter is a way that we can take a bunch of elements, like those in a list, and "scatter" those elements around to the processing nodes.</p>
 <pre><code>cat &lt;&lt;EOF &gt;&gt; ~/scatter.py
 from mpi4py import MPI
@@ -147,12 +147,12 @@ EOF
 <p>Once script created execute:</p>
 <pre><code>mpirun -np 16 -machinefile ~/machinefile python3 ~/scatter.py
 </code></pre>
-<p><img alt="MPIRUN Scatter" src="https://github.com/darrylcauldwell/piClusterRack/blob/main/_images/mpirun_scatter.png" /></p>
+<p><img alt="MPIRUN Scatter" src="https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/mpirun_scatter.png" /></p>
 <p>I thought it would be nice for my Pi cluster to calculate Pi with MPI and found the following script.</p>
 <pre><code>wget -O ~/pi.py https://raw.githubusercontent.com/darrylcauldwell/piClusterRack/main/pi.py
 mpirun -np 16 -machinefile ~/machinefile python3 pi.py
 </code></pre>
-<p><img alt="Pi with MPI on Pi" src="https://github.com/darrylcauldwell/piClusterRack/blob/main/_images/pi_with_mpi_on_pi.png" /></p></div>
+<p><img alt="Pi with MPI on Pi" src="https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/pi_with_mpi_on_pi.png" /></p></div>
             </div>
         </div>
 
