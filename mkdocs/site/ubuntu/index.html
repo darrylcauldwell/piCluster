@@ -186,40 +186,47 @@ sudo udevadm control --reload-rules &amp;&amp; sudo udevadm trigger
 <li>IOPS=5245, BW=20.5MiB/s</li>
 </ol>
 <h2 id="usb-flash-performance">USB Flash Performance</h2>
-<p>The USB flash drive should deliver improved performance,  with it attached I created a parition and mount point.</p>
-<pre><code># Check that the USB drive is seen by the system
-lsusb
-
-# Run fdisk(/sbin/fdisk) as root to list drives and partitions
-# The USB external drive will normally show as /dev/sda if you only have the one drive currently plugged in
-# The SD card on the Pi will normally show as /dev/mmcblk0
-sudo fdisk -l
-
-## Create primary partition on USB
-fdisk /dev/sda
-
-## Format the partition
-mkfs -t ext4 is equivalent to mkfs.ext4
-mkfs.ext4 -L SSD /dev/sda1
-
-## Mount the partition
-sudo mkdir /mnt/ssd
-sudo mount /dev/sda1 /mnt/ssd
-
-## Persist mounts
-sudo vi /etc/fstab
-
-LABEL=SSD  /mnt/ssd  ext4  defaults 0 2
+<p>The USB flash drive should deliver improved performance, first check it can be seen by the system and note its device. The SD card on the Pi will normally show as /dev/mmcblk0. The USB drive will normally show as /dev/sda </p>
+<pre><code>sudo fdisk -l
 </code></pre>
-<p>Then repeated the same performance tests using fio on the SSD.</p>
+<p><img alt="USB Device" src="https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/usb_dev.png" /></p>
+<p>Then create primary partition on USB device</p>
+<pre><code>sudo sfdisk /dev/sda &lt;&lt; EOF
+;
+EOF
+</code></pre>
+<p><img alt="USB Partition" src="https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/usb_dev.png" /></p>
+<p>Then format and label the partition</p>
+<pre><code>sudo mkfs.ext4 -L SSD /dev/sda1
+</code></pre>
+<p><img alt="USB Format" src="https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/usb_ext4.png" /></p>
+<p>We can then mount and move into and set permissions for the parition</p>
+<pre><code>sudo mkdir /mnt/ssd
+sudo mount /dev/sda1 /mnt/ssd
+echo &quot;LABEL=SSD  /mnt/ssd  ext4  defaults 0 2&quot; | sudo cat /etc/fstab -
+cd /mnt/ssd
+sudo chmod 777 .
+</code></pre>
+<p><img alt="USB Mount" src="https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/usb_ext4.png" /></p>
+<p>Then repeated the same performance tests using fio on the SSD. Linux FIO tool will be used to measure sequential write/read performance of a 4GB file:</p>
+<pre><code>fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=/mnt/ssd/test --bs=4k --iodepth=64 --size=4G --readwrite=write
+fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=/mnt/ssd/test --bs=4k --iodepth=64 --size=4G --readwrite=read
+</code></pre>
 <p>The tool output indcates me sequential reads:</p>
 <ol>
-<li></li>
+<li>IOPS=42.2k, BW=165MiB/s</li>
+<li>IOPS=43.9k, BW=171MiB/s</li>
+<li>IOPS=43.1k, BW=168MiB/s</li>
+<li>IOPS=43.9k, BW=171MiB/s</li>
 </ol>
 <p>The tool output indcates me sequential writes:</p>
 <ol>
-<li></li>
-</ol></div>
+<li>IOPS=12.3k, BW=48.2MiB/s</li>
+<li>IOPS=10.9k, BW=42.8MiB/s</li>
+<li>IOPS=10.6k, BW=41.5MiB/s</li>
+<li>IOPS=10.9k, BW=42.8MiB/s</li>
+</ol>
+<p>So for a very small investment inpwd the USB Flash Drives we've increased sequential read potential by ~400% and write potential by ~200%.  The Pi 4 firmware doesn't presently offer option for USB boot so the SD cards are needed but hopefully soon the firmware will get updated and this will</p></div>
             </div>
         </div>
 

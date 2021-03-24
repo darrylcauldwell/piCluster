@@ -115,40 +115,64 @@ The tool output indcates me sequential writes:
 
 ## USB Flash Performance
 
-The USB flash drive should deliver improved performance,  with it attached I created a parition and mount point.
+The USB flash drive should deliver improved performance, first check it can be seen by the system and note its device. The SD card on the Pi will normally show as /dev/mmcblk0. The USB drive will normally show as /dev/sda 
 
 ```
-# Check that the USB drive is seen by the system
-lsusb
-
-# Run fdisk(/sbin/fdisk) as root to list drives and partitions
-# The USB external drive will normally show as /dev/sda if you only have the one drive currently plugged in
-# The SD card on the Pi will normally show as /dev/mmcblk0
 sudo fdisk -l
+```
 
-## Create primary partition on USB
-fdisk /dev/sda
+![USB Device](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/usb_dev.png)
 
-## Format the partition
-mkfs -t ext4 is equivalent to mkfs.ext4
-mkfs.ext4 -L SSD /dev/sda1
 
-## Mount the partition
+Then create primary partition on USB device
+
+```
+sudo sfdisk /dev/sda << EOF
+;
+EOF
+```
+
+![USB Partition](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/usb_dev.png)
+
+Then format and label the partition
+
+```
+sudo mkfs.ext4 -L SSD /dev/sda1
+```
+
+![USB Format](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/usb_ext4.png)
+
+We can then mount and move into and set permissions for the parition
+
+```
 sudo mkdir /mnt/ssd
 sudo mount /dev/sda1 /mnt/ssd
-
-## Persist mounts
-sudo vi /etc/fstab
-
-LABEL=SSD  /mnt/ssd  ext4  defaults 0 2
+echo "LABEL=SSD  /mnt/ssd  ext4  defaults 0 2" | sudo cat /etc/fstab -
+cd /mnt/ssd
+sudo chmod 777 .
 ```
 
-Then repeated the same performance tests using fio on the SSD.
+![USB Mount](https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/usb_ext4.png)
+
+Then repeated the same performance tests using fio on the SSD. Linux FIO tool will be used to measure sequential write/read performance of a 4GB file:
+
+```
+fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=/mnt/ssd/test --bs=4k --iodepth=64 --size=4G --readwrite=write
+fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=/mnt/ssd/test --bs=4k --iodepth=64 --size=4G --readwrite=read
+```
 
 The tool output indcates me sequential reads:
 
-1.  
+1.  IOPS=42.2k, BW=165MiB/s
+2.  IOPS=43.9k, BW=171MiB/s
+3.  IOPS=43.1k, BW=168MiB/s
+4.  IOPS=43.9k, BW=171MiB/s
 
 The tool output indcates me sequential writes:
 
-1.  
+1.  IOPS=12.3k, BW=48.2MiB/s
+2.  IOPS=10.9k, BW=42.8MiB/s
+3.  IOPS=10.6k, BW=41.5MiB/s
+4.  IOPS=10.9k, BW=42.8MiB/s
+
+So for a very small investment inpwd the USB Flash Drives we've increased sequential read potential by ~400% and write potential by ~200%.  The Pi 4 firmware doesn't presently offer option for USB boot so the SD cards are needed but hopefully soon the firmware will get updated and this will
