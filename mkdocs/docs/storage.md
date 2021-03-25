@@ -74,4 +74,6 @@ The tool output shows sequential read rate:
 3.  IOPS=42.6k, BW=166MiB/s
 4.  IOPS=42.5k, BW=166MiB/s
 
-So for a very small investment inpwd the USB Flash Drives we've increased sequential read potential by 4X and write potential by 3X.  The Pi 4 firmware doesn't presently offer option for USB boot so the SD cards are needed but hopefully soon the firmware will get updated.
+## Summary
+
+So for a very small investment in the USB Flash Drives we've increased sequential read potential by 4X and write potential by 3X over the SD card.  The Pi 4 firmware doesn't presently offer option for USB boot so the SD cards are needed but hopefully soon the firmware will get updated.
