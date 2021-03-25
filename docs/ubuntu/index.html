@@ -45,6 +45,9 @@
                             <li class="navitem">
                                 <a href="../mpi/" class="nav-link">MPI</a>
                             </li>
+                            <li class="navitem">
+                                <a href="../storage/" class="nav-link">Storage</a>
+                            </li>
                         </ul>
 
                     <ul class="nav navbar-nav ml-auto">
@@ -94,18 +97,12 @@
               </ul>
             </li>
             
+            <li class="nav-item" data-level="1"><a href="#storage-performance" class="nav-link">Storage Performance</a>
+              <ul class="nav flex-column">
             <li class="nav-item" data-level="2"><a href="#usb-flash-disk" class="nav-link">USB Flash Disk</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            
-            <li class="nav-item" data-level="2"><a href="#sd-card-performance" class="nav-link">SD Card Performance</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            
-            <li class="nav-item" data-level="2"><a href="#usb-flash-performance" class="nav-link">USB Flash Performance</a>
-              <ul class="nav flex-column">
               </ul>
             </li>
         </ul>
@@ -144,7 +141,11 @@ sudo apt upgrade -y
 </code></pre>
 <h2 id="install-tools">Install Tools</h2>
 <p>The VideoCore packages provide command line utilities that can get various pieces of information from the VideoCore GPU on the Raspberry Pi. The linux flexible I/O tester tool is  easy to use and useful for understanding storage sub-system performance.</p>
-<pre><code>sudo apt install -y libraspberrypi-bin fio
+<pre><code>sudo apt install -y libraspberrypi-bin
+</code></pre>
+<h1 id="storage-performance">Storage Performance</h1>
+<p>The linux flexible I/O tester tool is  easy to use and useful for understanding storage sub-system performance.</p>
+<pre><code>sudo apt install -y fio
 </code></pre>
 <h2 id="usb-flash-disk">USB Flash Disk</h2>
 <p>The SD card on the Pi will normally show as /dev/mmcblk0. The USB drive will normally show as /dev/sda. The following could be data destructive so check the enumeration before proceeding.</p>
@@ -164,65 +165,7 @@ sudo mount /dev/sda1 /mnt/ssd
 echo &quot;LABEL=SSD  /mnt/ssd  ext4  defaults 0 2&quot; | sudo cat /etc/fstab -
 sudo chmod 777 .
 </code></pre>
-<p><img alt="USB Mount" src="https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/usb_ext4.png" /></p>
-<h2 id="sd-card-performance">SD Card Performance</h2>
-<p>Linux FIO tool will be used to measure sequential write performance of a 4GB file:</p>
-<pre><code>fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=write
-</code></pre>
-<p><img alt="SD Card Read Performance" src="https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/sd_reads.png" /></p>
-<p>The tool output shows sequential read rate:</p>
-<ol>
-<li>IOPS=10.1k, BW=39.5MiB/s</li>
-<li>IOPS=10.1k, BW=39.3MiB/s</li>
-<li>IOPS=10.1k, BW=39.4MiB/s</li>
-<li>IOPS=10.1k, BW=39.3MiB/s</li>
-</ol>
-<p>Similarly, the tool will be used to measure sequential read performance of a 4GB file:</p>
-<pre><code>fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=read
-</code></pre>
-<p><img alt="SD Card Write Performance" src="https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/sd_writes.png" /></p>
-<p>The tool output shows sequential write rate:</p>
-<ol>
-<li>IOPS=5429, BW=21.2MiB/s</li>
-<li>IOPS=5128, BW=20.0MiB/s</li>
-<li>IOPS=5136, BW=20.1MiB/s</li>
-<li>IOPS=5245, BW=20.5MiB/s</li>
-</ol>
-<p>With the SD card the performance bottleneck is the reader which supports peak bandwidth 50MiB/s. To test this I has a lower spec SanDisk Ultra card so I repeated test and got near exact throughput to the SanDisk Extreme.</p>
-<p>The tool output shows sequential read rate:</p>
-<ol>
-<li>IOPS=10.1k, BW=39.4MiB/s</li>
-</ol>
-<p>The tool output shows sequential write rate:</p>
-<ol>
-<li>IOPS=5245, BW=20.5MiB/s</li>
-</ol>
-<h2 id="usb-flash-performance">USB Flash Performance</h2>
-<p>The USB flash drive should deliver improved performance, first check it can be seen by the system and note its device. </p>
-<p>Then repeated the same performance tests using fio on the SSD. Linux FIO tool will be used to measure sequential write/read performance of a 4GB file:</p>
-<pre><code>cd /mnt/ssd
-fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=write
-</code></pre>
-<p><img alt="USB Write Performance" src="https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/usb_writes.png" /></p>
-<p>The tool output shows sequential write rate:</p>
-<ol>
-<li>IOPS=14.5k, BW=56.6MiB/s</li>
-<li>IOPS=14.4k, BW=56.4MiB/s</li>
-<li>IOPS=14.4k, BW=56.2MiB/s</li>
-<li>IOPS=11.9k, BW=46.6MiB/s</li>
-</ol>
-<pre><code>cd /mnt/ssd
-fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=/mnt/ssd/test --bs=4k --iodepth=64 --size=4G --readwrite=read
-</code></pre>
-<p><img alt="USB Read Performance" src="https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/usb_reads.png" /></p>
-<p>The tool output shows sequential read rate:</p>
-<ol>
-<li>IOPS=33.3k, BW=130MiB/s</li>
-<li>IOPS=37.0k, BW=148MiB/s</li>
-<li>IOPS=42.6k, BW=166MiB/s</li>
-<li>IOPS=42.5k, BW=166MiB/s</li>
-</ol>
-<p>So for a very small investment inpwd the USB Flash Drives we've increased sequential read potential by 4X and write potential by 3X.  The Pi 4 firmware doesn't presently offer option for USB boot so the SD cards are needed but hopefully soon the firmware will get updated and this will</p></div>
+<p><img alt="USB Mount" src="https://raw.githubusercontent.com/darrylcauldwell/piCluster/main/_images/usb_ext4.png" /></p></div>
             </div>
         </div>
 
