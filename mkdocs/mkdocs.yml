@@ -3,6 +3,5 @@ nav:
     - Home: index.md
     - Hardware: hardware.md
     - Ubuntu: ubuntu.md
-    - MPI: mpi.md
     - Storage: storage.md
-repo_url: https://github.com/darrylcauldwell/piCluster
+    - MPI: mpi.md
