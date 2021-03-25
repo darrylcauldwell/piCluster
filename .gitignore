@@ -27,3 +27,4 @@ Temporary Items
 
 # libreCAD Temporary files
 *.dxf~
+mkdocs/site/

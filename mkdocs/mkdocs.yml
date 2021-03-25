@@ -4,3 +4,4 @@ nav:
     - Hardware: hardware.md
     - Ubuntu: ubuntu.md
     - MPI: mpi.md
+repo_url: https://github.com/darrylcauldwell/piCluster
