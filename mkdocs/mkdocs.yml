@@ -1,7 +1,0 @@
-site_name: Raspberry Pi Cluster
-nav:
-    - Home: index.md
-    - Hardware: hardware.md
-    - Ubuntu: ubuntu.md
-    - Storage: storage.md
-    - MPI: mpi.md
